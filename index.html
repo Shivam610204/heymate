@@ -1,16 +1,62 @@
 <!DOCTYPE html>
-
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>HeyMate</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeyMate Test</title>
 </head>
-<body>
+<body style="background:black;color:white;font-family:Arial;text-align:center;padding-top:100px;">
 
-<h1>HeyMate Firebase Connected ✅</h1>
+<h1>HeyMate Firebase Test</h1>
 
-<p>Firebase setup successful.</p>
+<button id="btn">Send Test Message</button>
+
+<p id="status">Waiting...</p>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import {
+getFirestore,
+collection,
+addDoc
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBlH9hbLBGFpoZmHpaClLnlpX0KtMlw5dY",
+  authDomain: "heymate-2a25f.firebaseapp.com",
+  projectId: "heymate-2a25f",
+  storageBucket: "heymate-2a25f.firebasestorage.app",
+  messagingSenderId: "593737033747",
+  appId: "1:593737033747:web:60e2bfb512593582b3f7e6",
+  measurementId: "G-Q7Q9HY2H1C"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+document.getElementById("btn").onclick = async () => {
+
+try {
+
+await addDoc(collection(db,"messages"),{
+text:"Hello From Website",
+time:Date.now()
+});
+
+document.getElementById("status").innerText =
+"Firebase Connected Successfully ✅";
+
+} catch(err){
+
+document.getElementById("status").innerText =
+err.message;
+
+}
+
+};
+
+</script>
 
 </body>
 </html>
