@@ -3,404 +3,480 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeyMate</title>
+<title>HeyMate PRO</title>
 
 <style>
+:root {
+    --bg-main: #060608;
+    --bg-card: #111115;
+    --bg-input: #1a1a22;
+    --primary: #00ff88;
+    --primary-glow: rgba(0, 255, 136, 0.3);
+    --text-main: #f1f5f9;
+    --text-muted: #64748b;
+    --accent-red: #ff4d4d;
+}
+
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 body{
-background:#0b1120;
-color:#fff;
-height:100vh;
+    background: var(--bg-main);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color: var(--text-main);
+    overflow: hidden;
 }
 
-.hidden{
-display:none;
+/* Background Glowing Effect */
+.bg-glow {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: var(--primary);
+    filter: blur(150px);
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 0;
+    animation: pulseGlow 8s infinite alternate;
 }
 
-.container{
-max-width:500px;
-margin:auto;
-padding:20px;
+@keyframes pulseGlow {
+    0% { transform: translate(-20%, -20%) scale(1); }
+    100% { transform: translate(20%, 20%) scale(1.2); }
 }
 
-.card{
-background:#111827;
-padding:20px;
-border-radius:15px;
-margin-top:30px;
+.screen{
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index: 1;
 }
 
-h1,h2{
-text-align:center;
-margin-bottom:15px;
+/* High Quality Entrance Animation for Card */
+.card {
+    background: var(--bg-card);
+    padding: 45px 35px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 255, 136, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    text-align: center;
+    backdrop-filter: blur(10px);
+    animation: premiumEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes premiumEntrance {
+    0% { opacity: 0; transform: translateY(40px) scale(0.95); filter: blur(10px); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+h1{
+    margin-bottom: 30px;
+    color: #fff;
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+h1 span {
+    color: var(--primary);
+    -webkit-text-fill-color: initial;
+    text-shadow: 0 0 20px var(--primary-glow);
 }
 
 input{
-width:100%;
-padding:12px;
-margin:8px 0;
-border:none;
-outline:none;
-border-radius:10px;
-background:#1f2937;
-color:white;
+    width:100%;
+    padding:15px;
+    margin:12px 0;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius:12px;
+    background: var(--bg-input);
+    color:white;
+    font-size: 15px;
+    transition: all 0.25s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
+    background: #20202a;
 }
 
 button{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:10px;
-background:#22c55e;
-color:white;
-font-weight:bold;
-cursor:pointer;
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    background: linear-gradient(135deg, #00ff88 0%, #00ca6d 100%);
+    color:#060608;
+    font-weight:700;
+    font-size: 16px;
+    cursor:pointer;
+    margin-top:20px;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    box-shadow: 0 5px 20px rgba(0, 255, 136, 0.15);
 }
 
 button:hover{
-opacity:.9;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 255, 136, 0.35);
 }
 
-.profile-id{
-font-size:35px;
-font-weight:bold;
-text-align:center;
-color:#22c55e;
-margin:10px 0;
+button:active{
+    transform: translateY(0);
+}
+
+#chatScreen{
+    display:none;
+    flex-direction:column;
+    height:100vh;
+    width:100%;
+    background: var(--bg-main);
+    animation: fadeIn 0.5s ease;
+}
+
+/* Professional Topbar */
+.topbar{
+    background: var(--bg-card);
+    padding: 18px 25px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.room-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--primary);
+}
+
+.logout-btn {
+    width: auto;
+    margin: 0;
+    padding: 10px 18px;
+    font-size: 14px;
+    background: rgba(255, 77, 77, 0.1);
+    color: var(--accent-red);
+    border: 1px solid rgba(255, 77, 77, 0.2);
+    box-shadow: none;
+}
+.logout-btn:hover {
+    background: var(--accent-red);
+    color: white;
+    box-shadow: 0 5px 15px rgba(255,77,77,0.3);
 }
 
 #messages{
-height:400px;
-overflow-y:auto;
-padding:10px;
-background:#0f172a;
-border-radius:10px;
-margin-bottom:10px;
+    flex:1;
+    overflow-y:auto;
+    padding:25px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    background: radial-gradient(circle at 50% 0%, #111116 0%, #060608 100%);
 }
 
+/* Smooth Message Pop Animation */
 .message{
-background:#1f2937;
-padding:10px;
-border-radius:10px;
-margin-bottom:10px;
+    background: var(--bg-card);
+    padding: 14px 18px;
+    border-radius: 16px;
+    max-width: 70%;
+    word-wrap: break-word;
+    border: 1px solid rgba(255,255,255,0.02);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    animation: messageSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
 }
 
-.time{
-font-size:11px;
-opacity:.7;
-margin-top:5px;
-text-align:right;
+@keyframes messageSlideIn {
+    0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:10px;
+.mine{
+    align-self:flex-end;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color:white;
+    border: none;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.15);
 }
 
-.online{
-color:#22c55e;
-font-size:12px;
+.sender{
+    font-size:12px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
 }
+.mine .sender {
+    color: rgba(255,255,255,0.8);
+}
+
+/* Typing Indicator Section */
+#typingIndicator {
+    padding: 5px 25px;
+    font-size: 13px;
+    color: var(--primary);
+    font-style: italic;
+    min-height: 25px;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.inputArea{
+    display:flex;
+    padding: 20px 25px;
+    background: var(--bg-card);
+    gap: 15px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.inputArea input{
+    margin:0;
+    flex:1;
+    background: var(--bg-main);
+}
+
+.inputArea button{
+    width:120px;
+    margin:0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+}
+
+/* Custom Scrollbar */
+#messages::-webkit-scrollbar { width: 5px; }
+#messages::-webkit-scrollbar-track { background: transparent; }
+#messages::-webkit-scrollbar-thumb { background: #22222e; border-radius: 10px; }
+#messages::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="bg-glow"></div>
 
-<!-- LOGIN -->
-
-<div id="loginPage" class="card">
-
-<h1>HeyMate</h1>
-
-<input
-type="text"
-id="username"
-placeholder="Enter Username"
-/>
-
-<button onclick="createProfile()">
-Create Profile
-</button>
-
+<div id="loginScreen" class="screen">
+    <div class="card">
+        <h1>Hey<span>Mate</span></h1>
+        <input type="text" id="username" placeholder="Enter Username">
+        <input type="password" id="roomCode" placeholder="Enter Security Code">
+        <button onclick="joinChat()">Access Dashboard</button>
+    </div>
 </div>
 
-<!-- PROFILE -->
+<div id="chatScreen">
+    <div class="topbar">
+        <div class="room-info">
+            <div class="status-dot"></div>
+            <span style="font-weight: 700; letter-spacing: 0.5px;">HeyMate Workspace</span>
+        </div>
+        <button class="logout-btn" onclick="logout()">Disconnect</button>
+    </div>
 
-<div id="profilePage" class="card hidden">
+    <div id="messages"></div>
+    <div id="typingIndicator"></div>
 
-<h2 id="profileName"></h2>
-
-<p style="text-align:center;">
-Your Chat ID
-</p>
-
-<div id="myId" class="profile-id">
-000
-</div>
-
-<input
-type="number"
-id="friendId"
-placeholder="Enter Friend Chat ID"
-/>
-
-<button onclick="connectUser()">
-Connect User
-</button>
-
-</div>
-
-<!-- CHAT -->
-
-<div id="chatPage" class="card hidden">
-
-<div class="header">
-
-<div>
-<h3 id="chatUser">
-Private Chat
-</h3>
-</div>
-
-<div class="online">
-Online
-</div>
-
-</div>
-
-<div id="messages"></div>
-
-<input
-type="text"
-id="messageInput"
-placeholder="Type message..."
-/>
-
-<button onclick="sendMessage()">
-Send Message
-</button>
-
-</div>
-
+    <div class="inputArea">
+        <input type="text" id="messageInput" placeholder="Write a secure message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
 </div>
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 import {
-getFirestore,
-doc,
-setDoc,
-getDoc,
-collection,
-addDoc,
-query,
-orderBy,
-onSnapshot
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    getFirestore,
+    collection,
+    addDoc,
+    doc,
+    setDoc,
+    deleteDoc,
+    query,
+    orderBy,
+    onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
-
-apiKey: "AIzaSyBlH9hbLBGFpoZmHpaClLnlpX0KtMlw5dY",
-
-authDomain: "heymate-2a25f.firebaseapp.com",
-
-projectId: "heymate-2a25f",
-
-storageBucket: "heymate-2a25f.firebasestorage.app",
-
-messagingSenderId: "593737033747",
-
-appId: "1:593737033747:web:60e2bfb512593582b3f7e6"
-
+    apiKey: "AIzaSyBlH9hbLBGFpoZmHpaClLnlpX0KtMlw5dY",
+    authDomain: "heymate-2a25f.firebaseapp.com",
+    projectId: "heymate-2a25f",
+    storageBucket: "heymate-2a25f.firebasestorage.app",
+    messagingSenderId: "593737033747",
+    appId: "1:593737033747:web:60e2bfb512593582b3f7e6",
+    measurementId: "G-Q7Q9HY2H1C"
 };
 
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
 
-let currentUser = "";
-let currentId = "";
-let currentChat = "";
+window.currentUser = "";
+let typingTimeout;
 
-window.createProfile = async function(){
+// Session Check on Page Load
+window.addEventListener("DOMContentLoaded", () => {
+    const savedUser = localStorage.getItem("heymate_user");
+    if (savedUser) {
+        window.currentUser = savedUser;
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("chatScreen").style.display = "flex";
+        loadMessages();
+        listenToTyping();
+    }
+});
 
-const username =
-document.getElementById("username").value;
+window.joinChat = function(){
+    const username = document.getElementById("username").value.trim();
+    const code = document.getElementById("roomCode").value.trim();
 
-if(!username) return;
+    if(!username){
+        alert("Please enter a username");
+        return;
+    }
 
-currentUser = username;
+    if(code !== "911"){
+        alert("Invalid security code");
+        return;
+    }
 
-currentId =
-Math.floor(
-100000 + Math.random()*900000
-).toString();
+    window.currentUser = username;
+    localStorage.setItem("heymate_user", username);
 
-await setDoc(
-doc(db,"users",currentId),
-{
-username,
-id:currentId
-}
-);
+    document.getElementById("loginScreen").style.display="none";
+    document.getElementById("chatScreen").style.display="flex";
 
-document.getElementById("profileName")
-.innerText=username;
-
-document.getElementById("myId")
-.innerText=currentId;
-
-document.getElementById("loginPage")
-.classList.add("hidden");
-
-document.getElementById("profilePage")
-.classList.remove("hidden");
-
+    loadMessages();
+    listenToTyping();
 };
-window.connectUser = async function(){
 
-const friendId =
-document.getElementById("friendId").value;
-
-if(!friendId){
-alert("Enter Friend ID");
-return;
-}
-
-const friendDoc =
-await getDoc(doc(db,"users",friendId));
-
-if(!friendDoc.exists()){
-alert("User Not Found");
-return;
-}
-
-const friendData = friendDoc.data();
-
-document.getElementById("chatUser")
-.innerText = friendData.username;
-
-currentChat =
-[currentId,friendId]
-.sort()
-.join("_");
-
-document.getElementById("profilePage")
-.classList.add("hidden");
-
-document.getElementById("chatPage")
-.classList.remove("hidden");
-
-loadMessages();
-
+window.logout = async function() {
+    if(window.currentUser) {
+        await deleteDoc(doc(db, "typing", window.currentUser));
+    }
+    localStorage.removeItem("heymate_user");
+    window.location.reload();
 };
 
 window.sendMessage = async function(){
+    const input = document.getElementById("messageInput");
+    const text = input.value.trim();
 
-const input =
-document.getElementById("messageInput");
+    if(!text) return;
 
-const text = input.value.trim();
+    // Typing state clear before sending
+    await deleteDoc(doc(db, "typing", window.currentUser));
 
-if(!text) return;
+    await addDoc(
+        collection(db,"messages"),
+        {
+            username: currentUser,
+            text: text,
+            timestamp: Date.now()
+        }
+    );
 
-await addDoc(
-collection(
-db,
-"chats",
-currentChat,
-"messages"
-),
-{
-sender: currentUser,
-senderId: currentId,
-text: text,
-time: Date.now()
-}
-);
-
-input.value="";
-
+    input.value="";
 };
 
 function loadMessages(){
+    const q = query(collection(db,"messages"), orderBy("timestamp"));
 
-const q = query(
-collection(
-db,
-"chats",
-currentChat,
-"messages"
-),
-orderBy("time")
-);
+    onSnapshot(q,(snapshot)=>{
+        const box = document.getElementById("messages");
+        box.innerHTML="";
 
-onSnapshot(q,(snapshot)=>{
+        snapshot.forEach((doc)=>{
+            const data = doc.data();
+            const msg = document.createElement("div");
+            msg.classList.add("message");
 
-const messages =
-document.getElementById("messages");
+            if(data.username === currentUser){
+                msg.classList.add("mine");
+            }
 
-messages.innerHTML="";
-
-snapshot.forEach((docSnap)=>{
-
-const data = docSnap.data();
-
-const time =
-new Date(data.time)
-.toLocaleTimeString([],{
-hour:"2-digit",
-minute:"2-digit"
-});
-
-const div =
-document.createElement("div");
-
-div.className="message";
-
-div.innerHTML = `
-<b>${data.sender}</b>
-<div>${data.text}</div>
-<div class="time">${time}</div>
-`;
-
-messages.appendChild(div);
-
-});
-
-messages.scrollTop =
-messages.scrollHeight;
-
-});
-
+            msg.innerHTML = `
+                <div class="sender">${data.username}</div>
+                <div>${data.text}</div>
+            `;
+            box.appendChild(msg);
+        });
+        box.scrollTop = box.scrollHeight;
+    });
 }
 
-document
-.getElementById("messageInput")
-.addEventListener("keypress",(e)=>{
+// Typing Logic Real-time Listeners
+const msgInput = document.getElementById("messageInput");
 
-if(e.key==="Enter"){
-sendMessage();
+msgInput.addEventListener("input", async () => {
+    if (!window.currentUser) return;
+
+    await setDoc(doc(db, "typing", window.currentUser), {
+        username: window.currentUser,
+        lastTyped: Date.now()
+    });
+
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(async () => {
+        await deleteDoc(doc(db, "typing", window.currentUser));
+    }, 3000);
+});
+
+function listenToTyping() {
+    onSnapshot(collection(db, "typing"), (snapshot) => {
+        const typingUsers = [];
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.username !== window.currentUser && (Date.now() - data.lastTyped < 4000)) {
+                typingUsers.push(data.username);
+            }
+        });
+
+        const indicator = document.getElementById("typingIndicator");
+        if (typingUsers.length > 0) {
+            indicator.innerText = `${typingUsers.join(", ")} ${typingUsers.length > 1 ? 'are' : 'is'} typing...`;
+            indicator.style.opacity = "1";
+        } else {
+            indicator.style.opacity = "0";
+            setTimeout(() => { if(indicator.style.opacity === "0") indicator.innerText = ""; }, 300);
+        }
+    });
 }
 
+// Enter Key Support
+msgInput.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        sendMessage();
+    }
 });
 
 </script>
-
 </body>
 </html>
